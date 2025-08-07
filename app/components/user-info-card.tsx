@@ -24,8 +24,14 @@ export default function UserInfo() {
   const userEmail = user?.email ?? "anon";
   const { client } = useSmartAccountClient({});
 
+  const isExternalSolanaWallet = user?.type === "eoa" && user?.solanaAddress;
+  const isSmartAccountOrEVM = !isExternalSolanaWallet && user;
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(client?.account?.address ?? "");
+    const addressToCopy = isExternalSolanaWallet
+      ? user?.solanaAddress
+      : client?.account?.address;
+    navigator.clipboard.writeText(addressToCopy ?? "");
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };
@@ -35,61 +41,119 @@ export default function UserInfo() {
       <CardHeader>
         <CardTitle>User Profile</CardTitle>
         <CardDescription>
-          Your users are always in control of their non-custodial smart wallet.
+          {isExternalSolanaWallet
+            ? "Connected with your external Solana wallet."
+            : "Your users are always in control of their non-custodial smart wallet."}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div>
-          <p className="text-sm font-medium text-muted-foreground mb-1">
-            Email
-          </p>
-          <p className="font-medium">{userEmail}</p>
-        </div>
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <p className="text-sm font-medium text-muted-foreground">
-              Smart wallet address
+        {/* Show email for smart account users only */}
+        {isSmartAccountOrEVM && (
+          <div>
+            <p className="text-sm font-medium text-muted-foreground mb-1">
+              Email
             </p>
+            <p className="font-medium">{userEmail}</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="font-mono text-xs py-1 px-2">
-              {formatAddress(client?.account?.address ?? "")}
-            </Badge>
-            <TooltipProvider>
-              <Tooltip open={isCopied}>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6"
-                    onClick={handleCopy}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Copied!</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={() => {
-                const address = client?.account?.address;
-                if (address && client?.chain?.blockExplorers?.default?.url) {
-                  window.open(
-                    `${client.chain.blockExplorers.default.url}/address/${address}`,
-                    "_blank"
-                  );
-                }
-              }}
-            >
-              <ExternalLink className="h-3.5 w-3.5" />
-            </Button>
+        )}
+
+        {/* Solana wallet address section */}
+        {isExternalSolanaWallet && (
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <p className="text-sm font-medium text-muted-foreground">
+                Solana wallet address
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="font-mono text-xs py-1 px-2">
+                {formatAddress(user?.solanaAddress ?? "")}
+              </Badge>
+              <TooltipProvider>
+                <Tooltip open={isCopied}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={handleCopy}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Copied!</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={() => {
+                  const address = user?.solanaAddress;
+                  if (address) {
+                    window.open(
+                      `https://explorer.solana.com/address/${address}`,
+                      "_blank"
+                    );
+                  }
+                }}
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* EVM smart wallet address section */}
+        {isSmartAccountOrEVM && (
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <p className="text-sm font-medium text-muted-foreground">
+                Smart wallet address
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="font-mono text-xs py-1 px-2">
+                {formatAddress(client?.account?.address ?? "")}
+              </Badge>
+              <TooltipProvider>
+                <Tooltip open={isCopied}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={handleCopy}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Copied!</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={() => {
+                  const address = client?.account?.address;
+                  if (address && client?.chain?.blockExplorers?.default?.url) {
+                    window.open(
+                      `${client.chain.blockExplorers.default.url}/address/${address}`,
+                      "_blank"
+                    );
+                  }
+                }}
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
