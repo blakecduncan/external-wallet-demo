@@ -18,46 +18,13 @@ if (!SPONSORSHIP_POLICY_ID) {
 }
 
 import { configForExternalWallets } from "@account-kit/react";
-import {
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-} from "@solana/wallet-adapter-wallets";
-import { metaMask, coinbaseWallet } from "wagmi/connectors";
 
-export const externalWallets = configForExternalWallets({
-  wallets: [
-    // Solana (Phantom)
-    {
-      featured: 0,
-      adapter: PhantomWalletAdapter,
-    },
-
-    // EVM (MetaMask)
-    {
-      featured: 1,
-      connector: metaMask,
-      logoUrl: "/mm.svg",
-    },
-
-    // Our out of the box wallet connect support (doesn't need the connector)
-    {
-      featured: 2,
-      type: "WalletConnect",
-      projectId: "YOUR_PID",
-    },
-
-    // Solana (Solflare) – not featured
-    { adapter: SolflareWalletAdapter },
-
-    // EVM (Coinbase)
-    {
-      featured: 3,
-      connector: coinbaseWallet,
-    },
-  ],
-  // Optional UI tweaks
-  // moreButtonText: "All wallets",
+export const externalWallets= configForExternalWallets({
+  wallets: ["wallet_connect", "coinbase wallet", "metamask"],
+  chainType: ["svm", "evm"],
+  walletConnectProjectId: "30e7ffaff99063e68cc9870c105d905b",
   hideMoreButton: false,
+  numFeaturedWallet: 2,
 });
 
 const uiConfig: AlchemyAccountsUIConfig = {
@@ -65,7 +32,7 @@ const uiConfig: AlchemyAccountsUIConfig = {
   auth: {
     sections: [
       [{ type: "email" }],
-      [        
+      [
         {
           type: "external_wallets",
           ...externalWallets.uiConfig,

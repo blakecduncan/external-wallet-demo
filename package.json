@@ -11,10 +11,10 @@
     "postinstall": "node scripts/postinstall.js"
   },
   "dependencies": {
-    "@account-kit/core": "4.53.1-alpha.0",
-    "@account-kit/infra": "4.53.1-alpha.0",
-    "@account-kit/react": "4.53.1-alpha.0",
-    "@account-kit/smart-contracts": "^4.53.1-alpha.0",
+    "@account-kit/core": "4.53.3-alpha.0",
+    "@account-kit/infra": "4.53.3-alpha.0",
+    "@account-kit/react": "4.53.3-alpha.0",
+    "@account-kit/smart-contracts": "4.53.3-alpha.0",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@solana/wallet-adapter-wallets": "^0.19.37",
