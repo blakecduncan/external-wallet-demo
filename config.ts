@@ -24,7 +24,7 @@ export const externalWallets = configForExternalWallets({
   chainType: ["svm", "evm"],
   walletConnectProjectId: "30e7ffaff99063e68cc9870c105d905b",
   hideMoreButton: false,
-  numFeaturedWallet: 2,
+  numFeaturedWallets: 2,
 });
 
 const uiConfig: AlchemyAccountsUIConfig = {
