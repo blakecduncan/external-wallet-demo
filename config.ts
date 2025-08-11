@@ -19,7 +19,7 @@ if (!SPONSORSHIP_POLICY_ID) {
 
 import { configForExternalWallets } from "@account-kit/react";
 
-export const externalWallets= configForExternalWallets({
+export const externalWallets = configForExternalWallets({
   wallets: ["wallet_connect", "coinbase wallet", "metamask"],
   chainType: ["svm", "evm"],
   walletConnectProjectId: "30e7ffaff99063e68cc9870c105d905b",
